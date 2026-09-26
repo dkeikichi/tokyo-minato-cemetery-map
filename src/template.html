@@ -1,0 +1,1231 @@
+<title>港区 墓地距離マップ</title>
+<meta name="description" content="東京都港区で、墓地から離れた住宅エリアを探すための地図。最寄りの墓地までの距離を色分けし、町・丁目・駅ごとに比べられます。">
+<meta property="og:title" content="港区 墓地距離マップ">
+<meta property="og:description" content="東京都港区で、墓地から離れた住宅エリアを探すための地図。最寄りの墓地までの距離を色分けし、町・丁目・駅ごとに比べられます。">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@700&family=BIZ+UDPGothic:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPMincho:wght@700&display=swap">
+<style>
+/*__LEAFLET_CSS__*/
+</style>
+<style>
+:root {
+  --bg: #eef1f0;
+  --panel: #ffffff;
+  --ink: #1b2326;
+  --ink-2: #48555a;
+  --ink-3: #758387;
+  --line: #d8dfde;
+  --line-2: #e8edec;
+  --accent: #1f5f9e;
+  --accent-soft: #e2edf6;
+  --focus: #1f5f9e;
+
+  --map-outside: #dde2e0;
+  --map-land: #f1f3f1;
+  --map-water: #bcd5e2;
+  --map-park: #d2e5cb;
+  --map-road: #ffffff;
+  --map-road-major: #ffffff;
+  --map-casing: #c3cbcb;
+  --map-rail: #39434a;
+  --map-rail-dash: #ffffff;
+  --map-cem: #423a4d;
+  --map-cem-edge: #ffffff;
+  --map-ward: #1b2326;
+  --map-label: #1b2326;
+  --map-label-halo: rgba(255, 255, 255, 0.92);
+
+  --near-3: #b3243c;
+  --near-2: #e0684e;
+  --near-1: #f2b186;
+  --far-1: #b3d6ea;
+  --far-2: #5a9fce;
+  --far-3: #1f5f9e;
+  --ov-alpha: 0.62;
+  --ov-alpha-nonres: 0.2;
+
+  --ok: #1f6f5c;
+  --ok-soft: #dff0ea;
+  --ng: #a3263a;
+  --ng-soft: #f8e3e4;
+
+  --font-body: "BIZ UDPGothic", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", Meiryo, sans-serif;
+  --font-num: "BIZ UDGothic", "BIZ UDPGothic", "Hiragino Sans", "Noto Sans JP", ui-monospace, sans-serif;
+  --font-display: "BIZ UDPMincho", "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #101517;
+    --panel: #172024;
+    --ink: #e5ecee;
+    --ink-2: #b0bcc0;
+    --ink-3: #82909a;
+    --line: #2a353a;
+    --line-2: #212b30;
+    --accent: #86bbe6;
+    --accent-soft: #1b2f3f;
+    --focus: #86bbe6;
+    --map-outside: #12181a;
+    --map-land: #1d2528;
+    --map-water: #15303f;
+    --map-park: #1e3325;
+    --map-road: #334046;
+    --map-road-major: #4a585e;
+    --map-casing: #0e1315;
+    --map-rail: #c7d0d4;
+    --map-rail-dash: #1d2528;
+    --map-cem: #d2c6e2;
+    --map-cem-edge: #1d2528;
+    --map-ward: #e5ecee;
+    --map-label: #e5ecee;
+    --map-label-halo: rgba(16, 21, 23, 0.9);
+    --near-3: #d83a50;
+    --near-2: #ea7a5e;
+    --near-1: #f0b48c;
+    --far-1: #9ccbe6;
+    --far-2: #5aa2d6;
+    --far-3: #2f78c0;
+    --ov-alpha: 0.55;
+    --ov-alpha-nonres: 0.16;
+    --ok: #7fd1b6;
+    --ok-soft: #173229;
+    --ng: #f08a96;
+    --ng-soft: #3a1c22;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #101517;
+  --panel: #172024;
+  --ink: #e5ecee;
+  --ink-2: #b0bcc0;
+  --ink-3: #82909a;
+  --line: #2a353a;
+  --line-2: #212b30;
+  --accent: #86bbe6;
+  --accent-soft: #1b2f3f;
+  --focus: #86bbe6;
+  --map-outside: #12181a;
+  --map-land: #1d2528;
+  --map-water: #15303f;
+  --map-park: #1e3325;
+  --map-road: #334046;
+  --map-road-major: #4a585e;
+  --map-casing: #0e1315;
+  --map-rail: #c7d0d4;
+  --map-rail-dash: #1d2528;
+  --map-cem: #d2c6e2;
+  --map-cem-edge: #1d2528;
+  --map-ward: #e5ecee;
+  --map-label: #e5ecee;
+  --map-label-halo: rgba(16, 21, 23, 0.9);
+  --near-3: #d83a50;
+  --near-2: #ea7a5e;
+  --near-1: #f0b48c;
+  --far-1: #9ccbe6;
+  --far-2: #5aa2d6;
+  --far-3: #2f78c0;
+  --ov-alpha: 0.55;
+  --ov-alpha-nonres: 0.16;
+  --ok: #7fd1b6;
+  --ok-soft: #173229;
+  --ng: #f08a96;
+  --ng-soft: #3a1c22;
+}
+
+html, body { height: 100%; }
+[hidden] { display: none !important; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+*, *::before, *::after { box-sizing: border-box; }
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+.app {
+  height: 100%;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 400px;
+  gap: 16px;
+}
+.map-wrap {
+  position: relative;
+  min-height: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--map-outside);
+}
+#map { position: absolute; inset: 0; background: var(--map-outside); font-family: var(--font-body); }
+.panel {
+  min-height: 0;
+  overflow-y: auto;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+}
+.panel > section, .panel > header, .panel > footer { padding: 20px 22px; }
+.panel > * + * { border-top: 1px solid var(--line-2); }
+
+@media (max-width: 900px) {
+  .app { height: auto; grid-template-columns: minmax(0, 1fr); }
+  .map-wrap { height: 64vh; min-height: 380px; }
+  .panel { overflow: visible; }
+  .panel > section, .panel > header, .panel > footer { padding: 18px 16px; }
+}
+
+/* ---------- header */
+.eyebrow {
+  margin: 0 0 6px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 27px;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  text-wrap: balance;
+}
+.lede { margin: 10px 0 0; color: var(--ink-2); font-size: 13.5px; line-height: 1.8; }
+.lede b { font-weight: 700; }
+.c-far { color: var(--far-3); }
+.c-near { color: var(--near-3); }
+:root[data-theme="dark"] .c-far { color: var(--far-2); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .c-far { color: var(--far-2); } }
+
+h2 {
+  margin: 0 0 12px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+
+/* ---------- threshold */
+.t-row { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+.t-val {
+  font-family: var(--font-num);
+  font-weight: 700;
+  font-size: 38px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+.t-unit { font-size: 15px; font-weight: 700; }
+.walk {
+  margin-left: auto;
+  align-self: center;
+  font-size: 12.5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
+  white-space: nowrap;
+}
+input[type="range"] {
+  width: 100%;
+  margin: 14px 0 2px;
+  accent-color: var(--accent);
+  height: 28px;
+}
+.t-ticks { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+
+.legend { margin-top: 18px; }
+.legend-bar { display: grid; grid-template-columns: repeat(6, 1fr); height: 14px; border-radius: 4px; overflow: hidden; }
+.legend-bar span { display: block; }
+.legend-scale { position: relative; height: 18px; margin-top: 4px; font-size: 11px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.legend-scale span { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; }
+.legend-scale span:first-child { transform: none; }
+.legend-scale span:last-child { transform: translateX(-100%); }
+.legend-scale .pivot { color: var(--ink); font-weight: 700; }
+.legend-cap { display: flex; justify-content: space-between; font-size: 12px; margin-top: 2px; }
+.legend-cap .n { color: var(--near-3); font-weight: 700; }
+.legend-cap .f { color: var(--far-3); font-weight: 700; }
+:root[data-theme="dark"] .legend-cap .f { color: var(--far-2); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .legend-cap .f { color: var(--far-2); } }
+.legend-keys { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 12px; font-size: 12px; color: var(--ink-2); }
+.key { display: inline-flex; align-items: center; gap: 6px; }
+.key i { display: inline-block; width: 14px; height: 12px; border-radius: 2px; }
+.key .k-cem { background: var(--map-cem); }
+.key .k-st { width: 10px; height: 10px; border-radius: 50%; background: var(--panel); border: 2.5px solid var(--ink); }
+.key .k-temple { width: auto; height: auto; font-style: normal; font-weight: 700; color: var(--near-3); }
+.key .k-dim { background: linear-gradient(90deg, var(--far-1), var(--far-1)); opacity: 0.45; }
+
+.options { display: grid; gap: 8px; margin-top: 16px; }
+.check { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 13.5px; line-height: 1.5; }
+.check input { margin: 3px 0 0; width: 16px; height: 16px; accent-color: var(--accent); flex: none; }
+.check small { display: block; color: var(--ink-3); font-size: 12px; }
+
+/* ---------- summary */
+.summary { display: grid; grid-template-columns: auto 1fr; gap: 4px 16px; align-items: center; }
+.big {
+  font-family: var(--font-num);
+  font-weight: 700;
+  font-size: 46px;
+  line-height: 1;
+  color: var(--far-3);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-theme="dark"] .big { color: var(--far-2); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .big { color: var(--far-2); } }
+.big small { font-size: 20px; margin-left: 2px; }
+.summary p { margin: 0; font-size: 13px; line-height: 1.7; color: var(--ink-2); }
+.summary p b { color: var(--ink); }
+.summary .meter { grid-column: 1 / -1; height: 8px; border-radius: 4px; background: var(--line-2); overflow: hidden; margin-top: 8px; }
+.summary .meter span { display: block; height: 100%; background: var(--far-2); border-radius: 4px; transition: width 0.2s ease; }
+
+/* ---------- ranking */
+.tabs { display: grid; grid-template-columns: repeat(3, 1fr); padding: 3px; gap: 3px; border-radius: 10px; background: var(--line-2); }
+.tab {
+  border: 0;
+  background: transparent;
+  padding: 7px 4px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.tab[aria-selected="true"] { background: var(--panel); color: var(--ink); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12); }
+.rank-note { margin: 12px 0 8px; font-size: 12px; color: var(--ink-3); line-height: 1.6; }
+.rank-list { list-style: none; margin: 0; padding: 0; }
+.rank-list li + li { border-top: 1px solid var(--line-2); }
+.row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr) 76px 46px;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 4px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.row:hover { background: var(--line-2); }
+.row.active { background: var(--accent-soft); }
+.row .no { font-family: var(--font-num); font-size: 12px; color: var(--ink-3); text-align: right; font-variant-numeric: tabular-nums; }
+.row .nm { font-weight: 700; font-size: 14px; line-height: 1.35; overflow-wrap: anywhere; }
+.row .sub { display: block; font-weight: 400; font-size: 11.5px; color: var(--ink-3); }
+.row .bar { height: 6px; border-radius: 3px; background: var(--ng-soft); overflow: hidden; }
+.row .bar span { display: block; height: 100%; background: var(--far-2); }
+.row .pct { font-family: var(--font-num); font-weight: 700; font-size: 14px; text-align: right; font-variant-numeric: tabular-nums; }
+.row .pct small { font-size: 10.5px; margin-left: 1px; color: var(--ink-3); }
+
+/* ---------- notes */
+details summary { cursor: pointer; font-weight: 700; font-size: 13.5px; }
+.notes ul { margin: 10px 0 0; padding-left: 1.2em; color: var(--ink-2); font-size: 12.5px; line-height: 1.75; }
+.notes li + li { margin-top: 4px; }
+.source { margin: 0; font-size: 11px; color: var(--ink-3); line-height: 1.6; }
+.source a, .leaflet-control-attribution a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+
+/* ---------- map chrome */
+.map-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 800;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--ink);
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 7px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+.map-hint {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 800;
+  background: var(--panel);
+  color: var(--ink-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  max-width: calc(100% - 140px);
+}
+.loading {
+  position: absolute;
+  inset: 0;
+  z-index: 900;
+  display: grid;
+  place-items: center;
+  background: var(--map-outside);
+  color: var(--ink-2);
+  font-size: 14px;
+}
+.leaflet-container { background: var(--map-outside); font-family: var(--font-body); }
+.leaflet-bar a, .leaflet-bar a:hover { background: var(--panel); color: var(--ink); border-bottom-color: var(--line); }
+.leaflet-bar { border: 1px solid var(--line) !important; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15) !important; }
+.leaflet-control-attribution { background: var(--panel) !important; color: var(--ink-3); font-size: 10px; opacity: 0.9; }
+.leaflet-control-scale-line { background: var(--panel); color: var(--ink); border-color: var(--ink); }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--panel); color: var(--ink); box-shadow: 0 3px 14px rgba(0, 0, 0, 0.25); }
+.leaflet-popup-content-wrapper { border-radius: 10px; }
+.leaflet-popup-content { margin: 14px 16px; font-size: 13px; line-height: 1.6; }
+.leaflet-container a.leaflet-popup-close-button { color: var(--ink-3); }
+.leaflet-tooltip { background: var(--panel); color: var(--ink); border-color: var(--line); font-family: var(--font-body); font-size: 12px; }
+
+.pop { min-width: 190px; }
+.pop-kicker { font-size: 11px; letter-spacing: 0.06em; color: var(--ink-3); }
+.pop-place { font-weight: 700; font-size: 15px; }
+.pop-dist { margin-top: 6px; display: flex; align-items: baseline; gap: 4px; }
+.pop-dist b { font-family: var(--font-num); font-size: 28px; line-height: 1; font-variant-numeric: tabular-nums; }
+.pop-dist .w { margin-left: 6px; font-size: 12px; color: var(--ink-2); }
+.pop-to { font-size: 12.5px; color: var(--ink-2); }
+.pop-verdict { margin-top: 8px; padding: 5px 9px; border-radius: 6px; font-size: 12.5px; font-weight: 700; }
+.pop-verdict.ok { background: var(--ok-soft); color: var(--ok); }
+.pop-verdict.ng { background: var(--ng-soft); color: var(--ng); }
+.pop-row { margin-top: 6px; font-size: 12.5px; color: var(--ink-2); }
+.pop-row b { color: var(--ink); font-family: var(--font-num); }
+
+.lbl { pointer-events: none; }
+.lbl span {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  color: var(--map-label);
+  text-shadow: 0 0 3px var(--map-label-halo), 0 0 3px var(--map-label-halo), 0 0 2px var(--map-label-halo);
+}
+.lbl-town span { font-weight: 700; font-size: 13px; letter-spacing: 0.12em; }
+.lbl-chome span { font-size: 11px; color: var(--ink-2); }
+.st { cursor: pointer; }
+.st i {
+  position: absolute;
+  left: -6px;
+  top: -6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--panel);
+  border: 3px solid var(--map-label);
+}
+.st span {
+  position: absolute;
+  left: 9px;
+  top: -9px;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--map-label);
+  text-shadow: 0 0 3px var(--map-label-halo), 0 0 3px var(--map-label-halo), 0 0 2px var(--map-label-halo);
+}
+.st.out i { width: 10px; height: 10px; left: -5px; top: -5px; border-width: 2px; }
+.st.out span { font-weight: 400; font-size: 11px; color: var(--ink-2); }
+.temple span {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--near-3);
+  text-shadow: 0 0 3px var(--map-label-halo), 0 0 3px var(--map-label-halo);
+}
+.z-lt14 .st span { display: none; }
+.z-lt13 .st.out { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .summary .meter span { transition: none; }
+}
+</style>
+
+<div class="app">
+  <div class="map-wrap">
+    <div id="map" role="application" aria-label="港区の墓地からの距離を色分けした地図"></div>
+    <button class="map-btn" id="resetView" type="button">港区全体を表示</button>
+    <div class="map-hint" id="hint">地図をタップすると、その地点から墓地までの距離を表示します</div>
+    <div class="loading" id="loading">距離を計算しています…</div>
+  </div>
+
+  <aside class="panel" aria-label="条件と結果">
+    <header>
+      <p class="eyebrow">東京都港区・物件探しの下調べ</p>
+      <h1>墓地から離れた住宅エリアを探す地図</h1>
+      <p class="lede">色は「いちばん近い墓地までの直線距離」です。<b class="c-far">青</b>は希望の距離より離れている場所、<b class="c-near">赤</b>は墓地に近い場所。気になる地点をタップすると、距離と徒歩分数が分かります。</p>
+    </header>
+
+    <section aria-labelledby="h-cond">
+      <h2 id="h-cond">墓地からどれくらい離れたい？</h2>
+      <div class="t-row">
+        <output class="t-val" id="tVal" for="threshold">200</output>
+        <span class="t-unit">m 以上</span>
+        <span class="walk" id="tWalk">徒歩 3分ぶん</span>
+      </div>
+      <input type="range" id="threshold" min="50" max="500" step="50" value="200" aria-label="墓地からの希望距離（メートル）">
+      <div class="t-ticks"><span>50m</span><span>150</span><span>250</span><span>350</span><span>500m</span></div>
+
+      <div class="legend" aria-label="凡例">
+        <div class="legend-bar" id="legendBar">
+          <span style="background:var(--near-3)"></span><span style="background:var(--near-2)"></span><span style="background:var(--near-1)"></span><span style="background:var(--far-1)"></span><span style="background:var(--far-2)"></span><span style="background:var(--far-3)"></span>
+        </div>
+        <div class="legend-scale" id="legendScale"></div>
+        <div class="legend-cap"><span class="n">← 墓地に近い（条件外）</span><span class="f">離れている（条件内）→</span></div>
+        <div class="legend-keys">
+          <span class="key"><i class="k-cem"></i>墓地・霊園</span>
+          <span class="key"><i class="k-st"></i>駅</span>
+          <span class="key"><i class="k-dim"></i>薄い色＝公園・線路・倉庫など</span>
+        </div>
+      </div>
+
+      <div class="options">
+        <label class="check"><input type="checkbox" id="optTemples"><span>地図に墓地の記載がない寺院（<b class="c-near">卍</b>）も避ける<small>境内墓地が登録されていない寺があるため。寺院の位置から半径30mを墓地として扱います。</small></span></label>
+        <label class="check"><input type="checkbox" id="optLabels" checked><span>町名を表示</span></label>
+      </div>
+    </section>
+
+    <section class="summary" aria-live="polite">
+      <div class="big"><span id="sumPct">–</span><small>%</small></div>
+      <p>港区の住宅向けの土地のうち、墓地から<b id="sumT">200m</b>以上離れている割合（約<b id="sumArea">–</b>km²）</p>
+      <div class="meter"><span id="sumMeter" style="width:0"></span></div>
+    </section>
+
+    <section aria-labelledby="h-rank">
+      <h2 id="h-rank">条件を満たす土地が多いエリア</h2>
+      <div class="tabs" role="tablist" aria-labelledby="h-rank">
+        <button class="tab" role="tab" type="button" id="tab-town" aria-selected="true" data-tab="town">町ごと</button>
+        <button class="tab" role="tab" type="button" id="tab-chome" aria-selected="false" data-tab="chome">丁目ごと</button>
+        <button class="tab" role="tab" type="button" id="tab-station" aria-selected="false" data-tab="station">駅ごと</button>
+      </div>
+      <p class="rank-note" id="rankNote"></p>
+      <ol class="rank-list" id="rankList" role="tabpanel"></ol>
+    </section>
+
+    <section class="notes">
+      <details>
+        <summary>計算方法と注意点</summary>
+        <ul>
+          <li>距離は、墓地の敷地の端までの<b>直線距離</b>です。道のりや坂、建物の高さは考えていません。</li>
+          <li>徒歩分数は不動産広告と同じ「80m＝1分（端数は切り上げ）」で直線距離から換算した目安です。実際の道のりはもっと長くなります。</li>
+          <li>墓地の位置は OpenStreetMap に登録された墓地・霊園 <b id="cemCount">–</b> か所（港区内。区境から700m以内の周辺区の墓地も計算に含めています）。寺院墓地の名前は、すぐ隣の寺院名から推定しています。</li>
+          <li>寺の境内墓地には地図に未登録のものもあります。心配な場合は「墓地の記載がない寺院も避ける」をオンにしてください。</li>
+          <li>割合は、公園・墓地・線路・工場や倉庫・大学・水面などを除いた「住宅向けの土地」で計算しています。</li>
+          <li>ここで分かるのは目安です。物件を決める前に、窓からの眺めや周辺を必ず現地で確認してください。</li>
+        </ul>
+      </details>
+    </section>
+
+    <footer>
+      <p class="source" id="source"></p>
+    </footer>
+  </aside>
+</div>
+
+<script id="map-data" type="application/json">__DATA_JSON__</script>
+<script src="__LEAFLET_JS__"></script>
+<script>
+(function () {
+  'use strict';
+  const DATA = JSON.parse(document.getElementById('map-data').textContent);
+  const OX = DATA.origin[0], OY = DATA.origin[1];
+  const G = DATA.grid;
+  const NX = G.nx, NY = G.ny, N = NX * NY;
+  const R = 6378137;
+  const COS0 = G.pixM / G.s;           // true metres per mercator unit
+  const WALK_M = 80;                   // 不動産広告の徒歩1分
+  const STATION_R = 800;               // 徒歩10分圏
+  const TEMPLE_R = 30;
+
+  const $ = (id) => document.getElementById(id);
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem('minato-cem:' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem('minato-cem:' + k, JSON.stringify(v)); } catch (e) { /* storage unavailable */ } }
+  };
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---------------------------------------------------------------- geometry helpers
+  const mercX = (lon) => R * lon * Math.PI / 180;
+  const mercY = (lat) => R * Math.log(Math.tan(Math.PI / 4 + lat * Math.PI / 360));
+  const lonOf = (x) => x / R * 180 / Math.PI;
+  const latOf = (y) => (2 * Math.atan(Math.exp(y / R)) - Math.PI / 2) * 180 / Math.PI;
+  const toMetres = (lat, lon) => [mercX(lon) * COS0, mercY(lat) * COS0];
+  const fromMetres = (x, y) => [latOf(y / COS0), lonOf(x / COS0)];
+
+  function decRing(a) {
+    const out = new Array(a.length / 2);
+    let x = 0, y = 0;
+    for (let i = 0; i < a.length; i += 2) { x += a[i]; y += a[i + 1]; out[i / 2] = [OY + y / 1e5, OX + x / 1e5]; }
+    return out;
+  }
+  const decPolys = (polys) => polys.map((p) => p.map(decRing));
+  const decLines = (lines) => lines.map(decRing);
+
+  const walkMin = (m) => Math.max(1, Math.ceil(m / WALK_M));
+  const fmtM = (m) => (m < 1000 ? String(Math.round(m / 10) * 10) : (m / 1000).toFixed(1) + 'k');
+  const stName = (n) => (n.includes('（') ? n.replace('（', '駅（') : n + '駅');
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  // cemeteries in metres, for exact distances
+  const cems = DATA.cems.map((c, i) => {
+    const rings = [];
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    const polys = decPolys(c.poly);
+    polys.forEach((p, pi) => p.forEach((ring) => {
+      const pts = new Float64Array(ring.length * 2);
+      ring.forEach(([la, lo], j) => {
+        const [mx, my] = toMetres(la, lo);
+        pts[j * 2] = mx; pts[j * 2 + 1] = my;
+        if (mx < x0) x0 = mx; if (mx > x1) x1 = mx; if (my < y0) y0 = my; if (my > y1) y1 = my;
+      });
+      rings.push({ poly: pi, pts });
+    }));
+    return { i, name: c.name, kind: c.kind, area: c.area, inWard: c.inWard, latlngs: polys, rings, bb: [x0, y0, x1, y1] };
+  });
+  const temples = DATA.temples.map((t) => ({ ...t, m: toMetres(t.lat, t.lon) }));
+  const extraTemples = temples.filter((t) => !t.cem);
+  const stations = DATA.stations.map((s) => ({ ...s, m: toMetres(s.lat, s.lon) }));
+
+  function nearestOnRing(px, py, pts, best) {
+    const n = pts.length / 2;
+    for (let j = 0; j < n; j++) {
+      const ax = pts[j * 2], ay = pts[j * 2 + 1];
+      const k = (j + 1) % n;
+      const bx = pts[k * 2], by = pts[k * 2 + 1];
+      const dx = bx - ax, dy = by - ay;
+      const len = dx * dx + dy * dy;
+      let t = len > 0 ? ((px - ax) * dx + (py - ay) * dy) / len : 0;
+      t = t < 0 ? 0 : t > 1 ? 1 : t;
+      const qx = ax + t * dx, qy = ay + t * dy;
+      const d = Math.hypot(px - qx, py - qy);
+      if (d < best.d) { best.d = d; best.x = qx; best.y = qy; }
+    }
+  }
+  function insideRings(px, py, rings) {
+    let inside = false;
+    for (const r of rings) {
+      const pts = r.pts, n = pts.length / 2;
+      for (let j = 0, k = n - 1; j < n; k = j++) {
+        const yi = pts[j * 2 + 1], yj = pts[k * 2 + 1];
+        if ((yi > py) !== (yj > py)) {
+          const xi = pts[j * 2], xj = pts[k * 2];
+          if (px < (xj - xi) * (py - yi) / (yj - yi) + xi) inside = !inside;
+        }
+      }
+    }
+    return inside;
+  }
+  // exact nearest cemetery (and temple, when enabled) from a point in metres
+  function nearestCemetery(px, py, withTemples) {
+    let best = { d: Infinity, x: px, y: py, name: '', kind: '', inside: false };
+    for (const c of cems) {
+      const bb = c.bb;
+      const bx = Math.max(bb[0] - px, 0, px - bb[2]), by = Math.max(bb[1] - py, 0, py - bb[3]);
+      if (Math.hypot(bx, by) > best.d) continue;
+      const cand = { d: Infinity, x: 0, y: 0 };
+      const byPoly = {};
+      c.rings.forEach((r) => { (byPoly[r.poly] = byPoly[r.poly] || []).push(r); });
+      let inside = false;
+      for (const k in byPoly) if (insideRings(px, py, byPoly[k])) inside = true;
+      if (inside) { cand.d = 0; cand.x = px; cand.y = py; }
+      else c.rings.forEach((r) => nearestOnRing(px, py, r.pts, cand));
+      if (cand.d < best.d) best = { d: cand.d, x: cand.x, y: cand.y, name: c.name, kind: c.kind, inside, temple: false };
+    }
+    if (withTemples) {
+      for (const t of extraTemples) {
+        const dx = t.m[0] - px, dy = t.m[1] - py;
+        const dc = Math.hypot(dx, dy);
+        const d = Math.max(0, dc - TEMPLE_R);
+        if (d < best.d) {
+          const f = dc > 0 ? (dc - TEMPLE_R) / dc : 0;
+          best = { d, x: d > 0 ? px + dx * f : px, y: d > 0 ? py + dy * f : py, name: t.name, kind: '寺院', inside: d === 0, temple: true };
+        }
+      }
+    }
+    return best;
+  }
+  function nearestStation(px, py) {
+    let best = null, bd = Infinity;
+    for (const s of stations) {
+      const d = Math.hypot(s.m[0] - px, s.m[1] - py);
+      if (d < bd) { bd = d; best = s; }
+    }
+    return { s: best, d: bd };
+  }
+
+  // ---------------------------------------------------------------- raster data
+  async function inflate(b64) {
+    const bin = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+    if (typeof DecompressionStream === 'undefined') throw new Error('DecompressionStream unsupported');
+    const stream = new Blob([bin]).stream().pipeThrough(new DecompressionStream('deflate'));
+    return new Uint8Array(await new Response(stream).arrayBuffer());
+  }
+
+  const gx = (lon) => (mercX(lon) - G.x0) / G.s;
+  const gy = (lat) => (G.y1 - mercY(lat)) / G.s;
+
+  function fillPolygon(mask, rings) {
+    // rings: arrays of [gx, gy]; even-odd scanline fill of pixel centres
+    let minY = Infinity, maxY = -Infinity, sx = 0, sy = 0, cnt = 0;
+    for (const r of rings) for (const p of r) { if (p[1] < minY) minY = p[1]; if (p[1] > maxY) maxY = p[1]; }
+    for (const p of rings[0]) { sx += p[0]; sy += p[1]; cnt++; }
+    let filled = 0;
+    const y0 = Math.max(0, Math.floor(minY)), y1 = Math.min(NY - 1, Math.ceil(maxY));
+    const xs = [];
+    for (let py = y0; py <= y1; py++) {
+      const yc = py + 0.5;
+      xs.length = 0;
+      for (const r of rings) {
+        for (let j = 0, k = r.length - 1; j < r.length; k = j++) {
+          const a = r[k], b = r[j];
+          if ((a[1] <= yc && b[1] > yc) || (b[1] <= yc && a[1] > yc)) xs.push(a[0] + (yc - a[1]) / (b[1] - a[1]) * (b[0] - a[0]));
+        }
+      }
+      xs.sort((p, q) => p - q);
+      for (let k = 0; k + 1 < xs.length; k += 2) {
+        const xa = Math.max(0, Math.ceil(xs[k] - 0.5)), xb = Math.min(NX - 1, Math.floor(xs[k + 1] - 0.5));
+        for (let x = xa; x <= xb; x++) { mask[py * NX + x] = 1; filled++; }
+      }
+    }
+    if (!filled && cnt) {
+      const cx = Math.floor(sx / cnt), cy = Math.floor(sy / cnt);
+      if (cx >= 0 && cy >= 0 && cx < NX && cy < NY) mask[cy * NX + cx] = 1;
+    }
+  }
+
+  function buildSources(withTemples) {
+    const mask = new Uint8Array(N);
+    for (const c of cems) {
+      for (const p of c.latlngs) fillPolygon(mask, p.map((ring) => ring.map(([la, lo]) => [gx(lo), gy(la)])));
+    }
+    if (withTemples) {
+      const rp = TEMPLE_R / G.pixM;
+      for (const t of extraTemples) {
+        const cx = gx(t.lon), cy = gy(t.lat);
+        for (let y = Math.floor(cy - rp); y <= Math.ceil(cy + rp); y++) {
+          for (let x = Math.floor(cx - rp); x <= Math.ceil(cx + rp); x++) {
+            if (x < 0 || y < 0 || x >= NX || y >= NY) continue;
+            if (Math.hypot(x + 0.5 - cx, y + 0.5 - cy) <= rp) mask[y * NX + x] = 1;
+          }
+        }
+      }
+    }
+    return mask;
+  }
+
+  // Felzenszwalb & Huttenlocher exact Euclidean distance transform
+  function edt(mask) {
+    const INF = 1e12;
+    const f = new Float64Array(N);
+    for (let i = 0; i < N; i++) f[i] = mask[i] ? 0 : INF;
+    const maxN = Math.max(NX, NY);
+    const col = new Float64Array(maxN), out = new Float64Array(maxN), z = new Float64Array(maxN + 1);
+    const v = new Int32Array(maxN);
+    function pass(n) {
+      let k = 0; v[0] = 0; z[0] = -Infinity; z[1] = Infinity;
+      for (let q = 1; q < n; q++) {
+        let s = ((col[q] + q * q) - (col[v[k]] + v[k] * v[k])) / (2 * q - 2 * v[k]);
+        while (s <= z[k]) { k--; s = ((col[q] + q * q) - (col[v[k]] + v[k] * v[k])) / (2 * q - 2 * v[k]); }
+        k++; v[k] = q; z[k] = s; z[k + 1] = Infinity;
+      }
+      k = 0;
+      for (let q = 0; q < n; q++) { while (z[k + 1] < q) k++; const d = q - v[k]; out[q] = d * d + col[v[k]]; }
+    }
+    for (let x = 0; x < NX; x++) {
+      for (let y = 0; y < NY; y++) col[y] = f[y * NX + x];
+      pass(NY);
+      for (let y = 0; y < NY; y++) f[y * NX + x] = out[y];
+    }
+    const dist = new Float32Array(N);
+    for (let y = 0; y < NY; y++) {
+      const o = y * NX;
+      for (let x = 0; x < NX; x++) col[x] = f[o + x];
+      pass(NX);
+      for (let x = 0; x < NX; x++) dist[o + x] = Math.sqrt(out[x]) * G.pixM;
+    }
+    return dist;
+  }
+
+  // ---------------------------------------------------------------- theme tokens
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const t = (n) => cs.getPropertyValue(n).trim();
+    return {
+      outside: t('--map-outside'), land: t('--map-land'), water: t('--map-water'), park: t('--map-park'),
+      road: t('--map-road'), roadMajor: t('--map-road-major'), casing: t('--map-casing'),
+      rail: t('--map-rail'), railDash: t('--map-rail-dash'), cem: t('--map-cem'), cemEdge: t('--map-cem-edge'),
+      ward: t('--map-ward'), ink: t('--ink'),
+      bands: ['--near-3', '--near-2', '--near-1', '--far-1', '--far-2', '--far-3'].map((n) => hexToRgb(t(n))),
+      alpha: parseFloat(t('--ov-alpha')) || 0.6, alphaDim: parseFloat(t('--ov-alpha-nonres')) || 0.2
+    };
+  }
+  function hexToRgb(h) {
+    const m = h.replace('#', '');
+    const v = parseInt(m.length === 3 ? m.split('').map((c) => c + c).join('') : m, 16);
+    return [(v >> 16) & 255, (v >> 8) & 255, v & 255];
+  }
+
+  // ---------------------------------------------------------------- state
+  const state = {
+    T: clampT(store.get('threshold', 200)),
+    temples: !!store.get('temples', false),
+    labels: store.get('labels', true) !== false,
+    tab: ['town', 'chome', 'station'].includes(store.get('tab', 'town')) ? store.get('tab', 'town') : 'town',
+    active: null
+  };
+  function clampT(v) { v = Number(v); return Number.isFinite(v) ? Math.min(500, Math.max(50, Math.round(v / 50) * 50)) : 200; }
+
+  let zone, flags, dist, tok;
+
+  // ---------------------------------------------------------------- map
+  const map = L.map('map', {
+    zoomControl: true, attributionControl: true, minZoom: 12, maxZoom: 18,
+    zoomSnap: 0.5, preferCanvas: true, worldCopyJump: false
+  });
+  map.attributionControl.setPrefix(false);
+  map.attributionControl.addAttribution('地図データ © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a> · <a href="https://overturemaps.org/" target="_blank" rel="noopener">Overture Maps Foundation</a>');
+  L.control.scale({ imperial: false, position: 'bottomright' }).addTo(map);
+
+  const panes = [['base', 210], ['ov', 300], ['roads', 330], ['cemPane', 360], ['wardPane', 380], ['hl', 390], ['lblPane', 450], ['stPane', 610]];
+  panes.forEach(([n, z]) => { map.createPane(n); map.getPane(n).style.zIndex = z; });
+  map.getPane('lblPane').style.pointerEvents = 'none';
+  const rBase = L.canvas({ pane: 'base', padding: 0.4 });
+  const rRoads = L.canvas({ pane: 'roads', padding: 0.4 });
+  const rCem = L.canvas({ pane: 'cemPane', padding: 0.4 });
+  const rWard = L.canvas({ pane: 'wardPane', padding: 0.4 });
+  const rHl = L.canvas({ pane: 'hl', padding: 0.4 });
+
+  const wardLL = decPolys(DATA.ward);
+  const wardBounds = L.polygon(wardLL).getBounds();
+  const v = DATA.view;
+  map.setMaxBounds(L.latLngBounds([v[1] - 0.01, v[0] - 0.015], [v[3] + 0.01, v[2] + 0.015]));
+
+  tok = tokens();
+  const layers = {};
+  layers.land = L.polygon(wardLL, { renderer: rBase, stroke: false, fillColor: tok.land, fillOpacity: 1, interactive: false }).addTo(map);
+  layers.water = L.polygon(decPolys(DATA.water), { renderer: rBase, stroke: false, fillColor: tok.water, fillOpacity: 1, interactive: false }).addTo(map);
+  layers.park = L.polygon(decPolys(DATA.parks), { renderer: rBase, stroke: false, fillColor: tok.park, fillOpacity: 1, interactive: false }).addTo(map);
+
+  const roadLines = DATA.roads.map(decLines);
+  layers.roadCasing = [0, 1, 2].map((i) => L.polyline(roadLines[i], { renderer: rRoads, color: tok.casing, interactive: false, lineCap: 'round', lineJoin: 'round' }).addTo(map));
+  layers.roads = [3, 2, 1, 0].map((i) => ({ i, l: L.polyline(roadLines[i], { renderer: rRoads, color: i === 3 ? tok.road : tok.roadMajor, interactive: false, lineCap: 'round', lineJoin: 'round' }).addTo(map) }));
+  const railLL = decLines(DATA.rail);
+  layers.rail = L.polyline(railLL, { renderer: rRoads, color: tok.rail, weight: 3.5, interactive: false }).addTo(map);
+  layers.railDash = L.polyline(railLL, { renderer: rRoads, color: tok.railDash, weight: 1.6, dashArray: '7 7', interactive: false }).addTo(map);
+
+  layers.cems = L.featureGroup(cems.map((c) => {
+    const lyr = L.polygon(c.latlngs, { renderer: rCem, color: tok.cemEdge, weight: 0.8, fillColor: tok.cem, fillOpacity: 0.92 });
+    lyr.bindTooltip(esc(c.name), { sticky: true, direction: 'top', offset: [0, -6] });
+    return lyr;
+  })).addTo(map);
+
+  layers.ward = L.polygon(wardLL, { renderer: rWard, fill: false, color: tok.ward, weight: 2.2, dashArray: '10 5 2 5', interactive: false }).addTo(map);
+
+  // distance overlay drawn into a canvas element placed by Leaflet like an image
+  const ovCanvas = document.createElement('canvas');
+  ovCanvas.width = NX; ovCanvas.height = NY;
+  const ovCtx = ovCanvas.getContext('2d');
+  const ovImg = ovCtx.createImageData(NX, NY);
+  const CanvasOverlay = L.ImageOverlay.extend({
+    _initImage: function () {
+      const el = this._image = this._url;
+      L.DomUtil.addClass(el, 'leaflet-image-layer');
+      if (this._zoomAnimated) L.DomUtil.addClass(el, 'leaflet-zoom-animated');
+      el.onselectstart = L.Util.falseFn;
+      el.onmousemove = L.Util.falseFn;
+    }
+  });
+  const ovBounds = L.latLngBounds([latOf(G.y1 - NY * G.s), lonOf(G.x0)], [latOf(G.y1), lonOf(G.x0 + NX * G.s)]);
+  layers.overlay = new CanvasOverlay(ovCanvas, ovBounds, { pane: 'ov', interactive: false }).addTo(map);
+
+  // labels
+  const townLayer = L.layerGroup(DATA.townLabels.map((t) => L.marker([t.lat, t.lon], {
+    pane: 'lblPane', interactive: false, keyboard: false,
+    icon: L.divIcon({ className: 'lbl lbl-town', html: '<span>' + esc(t.name) + '</span>', iconSize: [0, 0] })
+  })));
+  const chomeLayer = L.layerGroup(DATA.zoneLabels.map(([id, lon, lat]) => L.marker([lat, lon], {
+    pane: 'lblPane', interactive: false, keyboard: false,
+    icon: L.divIcon({ className: 'lbl lbl-chome', html: '<span>' + esc(DATA.zones[id - 1].name) + '</span>', iconSize: [0, 0] })
+  })));
+  const templeLayer = L.layerGroup(extraTemples.map((t) => L.marker([t.lat, t.lon], {
+    pane: 'lblPane', interactive: false, keyboard: false,
+    icon: L.divIcon({ className: 'lbl temple', html: '<span title="' + esc(t.name) + '">卍</span>', iconSize: [0, 0] })
+  })));
+  const stationLayer = L.layerGroup(stations.map((s) => {
+    const m = L.marker([s.lat, s.lon], {
+      pane: 'stPane', keyboard: true, title: stName(s.name),
+      icon: L.divIcon({ className: 'st' + (s.inWard ? '' : ' out'), html: '<i></i><span>' + esc(s.name) + '</span>', iconSize: [0, 0] })
+    });
+    m.on('click', (e) => { L.DomEvent.stopPropagation(e); openStation(s); });
+    return m;
+  })).addTo(map);
+
+  function applyZoomClasses() {
+    const z = map.getZoom();
+    const el = map.getContainer();
+    el.classList.toggle('z-lt13', z < 13);
+    el.classList.toggle('z-lt14', z < 14);
+    const showTowns = state.labels && z < 16;
+    const showChome = state.labels && z >= 16;
+    toggleLayer(townLayer, showTowns);
+    toggleLayer(chomeLayer, showChome);
+    toggleLayer(templeLayer, state.temples && z >= 14);
+    styleRoads(z);
+  }
+  function toggleLayer(l, on) { if (on && !map.hasLayer(l)) l.addTo(map); if (!on && map.hasLayer(l)) map.removeLayer(l); }
+
+  function styleRoads(z) {
+    const k = Math.max(0, z - 13);
+    const w = [
+      [1.2, 2, 3, 4.5, 6.5, 8.5],   // motorway
+      [1, 1.6, 2.6, 4, 6, 8],        // trunk / primary
+      [0.5, 0.9, 1.7, 3, 4.5, 6],    // secondary / tertiary
+      [0, 0.3, 0.8, 1.6, 2.8, 4]     // residential
+    ];
+    const idx = Math.min(5, Math.floor(k));
+    layers.roads.forEach(({ i, l }) => l.setStyle({ weight: w[i][idx], opacity: w[i][idx] ? 0.95 : 0 }));
+    layers.roadCasing.forEach((l, i) => l.setStyle({ weight: w[i][idx] + 1.6, opacity: z >= 15 ? 1 : 0 }));
+    layers.rail.setStyle({ weight: z >= 15 ? 4.5 : 3 });
+    layers.railDash.setStyle({ weight: z >= 15 ? 2.2 : 1.4, dashArray: z >= 15 ? '9 9' : '6 6' });
+  }
+
+  function restyle() {
+    tok = tokens();
+    layers.land.setStyle({ fillColor: tok.land });
+    layers.water.setStyle({ fillColor: tok.water });
+    layers.park.setStyle({ fillColor: tok.park });
+    layers.roads.forEach(({ i, l }) => l.setStyle({ color: i === 3 ? tok.road : tok.roadMajor }));
+    layers.roadCasing.forEach((l) => l.setStyle({ color: tok.casing }));
+    layers.rail.setStyle({ color: tok.rail });
+    layers.railDash.setStyle({ color: tok.railDash });
+    layers.cems.setStyle({ color: tok.cemEdge, fillColor: tok.cem });
+    layers.ward.setStyle({ color: tok.ward });
+    if (hl) hl.setStyle({ color: tok.ink });
+    if (dist) paintOverlay();
+  }
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', restyle);
+  new MutationObserver(restyle).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+
+  // ---------------------------------------------------------------- bands
+  function bandEdges(T) {
+    const r10 = (x) => Math.round(x / 10) * 10;
+    return [0, r10(T / 3), r10(2 * T / 3), T, T + 100, T + 250];
+  }
+  function paintOverlay() {
+    const T = state.T;
+    const e = bandEdges(T);
+    const px = ovImg.data;
+    const cols = tok.bands;
+    const aRes = Math.round(tok.alpha * 255), aDim = Math.round(tok.alphaDim * 255);
+    for (let i = 0; i < N; i++) {
+      const o = i * 4;
+      if (!zone[i] || (flags[i] & 2) || dist[i] === 0) { px[o + 3] = 0; continue; }
+      const d = dist[i];
+      const b = d < e[1] ? 0 : d < e[2] ? 1 : d < T ? 2 : d < e[4] ? 3 : d < e[5] ? 4 : 5;
+      const c = cols[b];
+      px[o] = c[0]; px[o + 1] = c[1]; px[o + 2] = c[2];
+      px[o + 3] = (flags[i] & 1) ? aDim : aRes;
+    }
+    ovCtx.putImageData(ovImg, 0, 0);
+  }
+
+  function renderLegend() {
+    const e = bandEdges(state.T);
+    const pos = [0, 1, 2, 3, 4, 5, 6].map((k) => (k / 6) * 100);
+    const labels = [e[0], e[1], e[2], e[3], e[4], e[5], null];
+    $('legendScale').innerHTML = labels.map((l, k) => {
+      const txt = l === null ? '' : (k === 3 ? l + 'm' : String(l));
+      return '<span' + (k === 3 ? ' class="pivot"' : '') + ' style="left:' + pos[k] + '%">' + txt + '</span>';
+    }).join('');
+  }
+
+  // ---------------------------------------------------------------- statistics
+  const zones = DATA.zones;
+  const zoneLL = zones.map((z) => decPolys(z.poly));
+  let stats = null;
+
+  function computeStats() {
+    const T = state.T;
+    const nz = zones.length + 1;
+    const tot = new Float64Array(nz), ok = new Float64Array(nz), sum = new Float64Array(nz);
+    for (let i = 0; i < N; i++) {
+      const z = zone[i];
+      if (!z || flags[i]) continue;
+      tot[z]++; sum[z] += dist[i];
+      if (dist[i] >= T) ok[z]++;
+    }
+    let all = 0, allOk = 0;
+    for (let z = 1; z < nz; z++) { all += tot[z]; allOk += ok[z]; }
+    const pxA = G.pixM * G.pixM;
+    const chome = zones.map((zn, k) => ({ id: k + 1, name: zn.name, town: zn.town, pseudo: zn.pseudo, tot: tot[k + 1], ok: ok[k + 1], mean: tot[k + 1] ? sum[k + 1] / tot[k + 1] : 0 }));
+    const towns = {};
+    for (const c of chome) {
+      const t = towns[c.town] || (towns[c.town] = { name: c.town, tot: 0, ok: 0, sum: 0, ids: [], nChome: 0 });
+      t.tot += c.tot; t.ok += c.ok; t.sum += c.mean * c.tot; t.ids.push(c.id);
+      if (!c.pseudo) t.nChome++;
+    }
+    const rp = STATION_R / G.pixM;
+    const st = stations.filter((s) => s.inWard).map((s) => {
+      const cx = gx(s.lon), cy = gy(s.lat);
+      let t = 0, o = 0;
+      for (let y = Math.max(0, Math.floor(cy - rp)); y <= Math.min(NY - 1, Math.ceil(cy + rp)); y++) {
+        for (let x = Math.max(0, Math.floor(cx - rp)); x <= Math.min(NX - 1, Math.ceil(cx + rp)); x++) {
+          const dx = x + 0.5 - cx, dy = y + 0.5 - cy;
+          if (dx * dx + dy * dy > rp * rp) continue;
+          const i = y * NX + x;
+          if (!zone[i] || flags[i]) continue;
+          t++; if (dist[i] >= T) o++;
+        }
+      }
+      return { s, tot: t, ok: o };
+    });
+    stats = {
+      all, allOk, areaKm2: allOk * pxA / 1e6, chome,
+      towns: Object.values(towns).map((t) => ({ ...t, mean: t.tot ? t.sum / t.tot : 0 })),
+      stations: st
+    };
+  }
+
+  function renderSummary() {
+    const pct = stats.all ? stats.allOk / stats.all * 100 : 0;
+    $('sumPct').textContent = Math.round(pct);
+    $('sumT').textContent = state.T + 'm';
+    $('sumArea').textContent = stats.areaKm2.toFixed(1);
+    $('sumMeter').style.width = pct.toFixed(1) + '%';
+  }
+
+  function pctOf(o, t) { return t ? Math.round(o / t * 100) : 0; }
+  function renderRanking() {
+    const T = state.T;
+    let rows = [];
+    let note = '';
+    if (state.tab === 'town') {
+      rows = stats.towns.filter((t) => t.tot >= 40).map((t) => ({
+        key: 'town:' + t.name, name: t.name, pct: pctOf(t.ok, t.tot),
+        sub: '平均 ' + fmtM(t.mean) + 'm' + (t.nChome > 1 ? '・' + t.nChome + '丁目' : ''), mean: t.mean
+      }));
+      note = '各町の住宅向けの土地のうち、墓地から ' + T + 'm 以上離れた割合。タップで地図を移動します。';
+    } else if (state.tab === 'chome') {
+      rows = stats.chome.filter((c) => !c.pseudo && c.tot >= 20).map((c) => ({
+        key: 'chome:' + c.id, name: c.name, pct: pctOf(c.ok, c.tot), sub: '平均 ' + fmtM(c.mean) + 'm', mean: c.mean
+      }));
+      note = '丁目ごとの割合です。同じ割合なら、墓地からの平均距離が長い順に並べています。';
+    } else {
+      rows = stats.stations.filter((r) => r.tot >= 200).map((r) => {
+        const nc = nearestCemetery(r.s.m[0], r.s.m[1], state.temples);
+        return { key: 'station:' + r.s.name, name: stName(r.s.name), pct: pctOf(r.ok, r.tot), sub: '駅から最寄りの墓地 ' + fmtM(nc.d) + 'm', mean: nc.d };
+      });
+      note = '駅から徒歩10分圏（半径800m）にある港区内の住宅向けの土地のうち、墓地から ' + T + 'm 以上離れた割合。';
+    }
+    rows.sort((a, b) => b.pct - a.pct || b.mean - a.mean || a.name.localeCompare(b.name, 'ja'));
+    $('rankNote').textContent = note;
+    $('rankList').innerHTML = rows.map((r, k) => (
+      '<li><button type="button" class="row' + (state.active === r.key ? ' active' : '') + '" data-key="' + esc(r.key) + '">' +
+      '<span class="no">' + (k + 1) + '</span>' +
+      '<span class="nm">' + esc(r.name) + '<span class="sub">' + esc(r.sub) + '</span></span>' +
+      '<span class="bar" aria-hidden="true"><span style="width:' + r.pct + '%"></span></span>' +
+      '<span class="pct">' + r.pct + '<small>%</small></span>' +
+      '</button></li>'
+    )).join('');
+  }
+
+  // ---------------------------------------------------------------- highlight / focus
+  let hl = null;
+  function clearHighlight() { if (hl) { map.removeLayer(hl); hl = null; } }
+  function focusKey(key) {
+    clearHighlight();
+    state.active = key;
+    const [kind, id] = key.split(/:(.*)/s);
+    let bounds = null;
+    if (kind === 'town') {
+      const polys = [];
+      zones.forEach((z, k) => { if (z.town === id) polys.push(...zoneLL[k]); });
+      if (polys.length) {
+        hl = L.polygon(polys, { renderer: rHl, fill: false, color: tok.ink, weight: 3, dashArray: '2 6', lineCap: 'round', interactive: false }).addTo(map);
+        bounds = hl.getBounds();
+      }
+    } else if (kind === 'chome') {
+      const k = Number(id) - 1;
+      if (zoneLL[k] && zoneLL[k].length) {
+        hl = L.polygon(zoneLL[k], { renderer: rHl, fill: false, color: tok.ink, weight: 3, dashArray: '2 6', lineCap: 'round', interactive: false }).addTo(map);
+        bounds = hl.getBounds();
+      }
+    } else if (kind === 'station') {
+      const s = stations.find((x) => x.name === id);
+      if (s) { openStation(s, true); bounds = L.latLng(s.lat, s.lon).toBounds(STATION_R * 2.2); }
+    }
+    if (bounds) {
+      scrollMapIntoView();
+      map.flyToBounds(bounds, { padding: [30, 30], maxZoom: 16.5, animate: !reduceMotion, duration: 0.6 });
+    }
+    document.querySelectorAll('.row').forEach((b) => b.classList.toggle('active', b.dataset.key === key));
+  }
+  function scrollMapIntoView() {
+    if (window.matchMedia('(max-width: 900px)').matches) {
+      const r = map.getContainer().getBoundingClientRect();
+      if (r.top < 0 || r.bottom > window.innerHeight) map.getContainer().scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    }
+  }
+
+  // ---------------------------------------------------------------- popups
+  let probe = null;
+  function clearProbe() { if (probe) { map.removeLayer(probe); probe = null; } }
+  map.on('popupclose', clearProbe);
+
+  function zoneAt(latlng) {
+    const x = Math.floor(gx(latlng.lng)), y = Math.floor(gy(latlng.lat));
+    if (x < 0 || y < 0 || x >= NX || y >= NY) return null;
+    const i = y * NX + x;
+    return { z: zone[i], f: flags[i] };
+  }
+
+  function openPoint(latlng) {
+    const [px, py] = toMetres(latlng.lat, latlng.lng);
+    const nc = nearestCemetery(px, py, state.temples);
+    const ns = nearestStation(px, py);
+    const zi = zoneAt(latlng);
+    const inWard = zi && zi.z > 0;
+    const place = inWard ? zones[zi.z - 1].name.replace('（その他）', '') : '港区の外';
+    const T = state.T;
+    const ok = nc.d >= T;
+    let html = '<div class="pop"><div class="pop-kicker">この地点</div><div class="pop-place">' + esc(place) + '</div>';
+    if (nc.inside) {
+      html += '<div class="pop-verdict ng">' + (nc.temple ? '寺院（' + esc(nc.name) + '）のすぐそばです' : '墓地の敷地内です（' + esc(nc.name) + '）') + '</div>';
+    } else {
+      html += '<div class="pop-dist"><b>' + fmtM(nc.d) + '</b>m<span class="w">徒歩 約' + walkMin(nc.d) + '分</span></div>' +
+        '<div class="pop-to">最寄りの' + (nc.temple ? '寺院' : '墓地') + '：' + esc(nc.name) + '</div>' +
+        '<div class="pop-verdict ' + (ok ? 'ok' : 'ng') + '">' + (ok ? '希望の ' + T + 'm 以上 離れています' : '希望の ' + T + 'm より近い') + '</div>';
+    }
+    if (!inWard) html += '<div class="pop-row">港区の外は周辺の墓地を一部しか収録していません</div>';
+    else if (zi.f & 1) html += '<div class="pop-row">ここは公園・線路・倉庫などの土地です</div>';
+    if (ns.s) html += '<div class="pop-row">最寄り駅：' + esc(stName(ns.s.name)) + ' <b>' + fmtM(ns.d) + 'm</b>（徒歩約' + walkMin(ns.d) + '分）</div>';
+    html += '</div>';
+
+    // opening the popup closes the previous one, which clears the previous probe
+    L.popup({ autoPanPadding: [20, 20], maxWidth: 280 }).setLatLng(latlng).setContent(html).openOn(map);
+    clearProbe();
+    const target = fromMetres(nc.x, nc.y);
+    probe = L.layerGroup([
+      L.polyline([latlng, target], { renderer: rHl, color: tok.ink, weight: 2, dashArray: '4 5', interactive: false }),
+      L.circleMarker(latlng, { renderer: rHl, radius: 6, color: tok.ink, weight: 2.5, fillColor: cssRgb(tok.bands[ok ? 4 : 0]), fillOpacity: 1, interactive: false }),
+      L.circleMarker(target, { renderer: rHl, radius: 3.5, color: tok.ink, weight: 0, fillColor: tok.ink, fillOpacity: 1, interactive: false })
+    ]).addTo(map);
+  }
+  const cssRgb = (c) => 'rgb(' + c.join(',') + ')';
+
+  function openStation(s, fromList) {
+    const r = stats && stats.stations.find((x) => x.s === s);
+    const nc = nearestCemetery(s.m[0], s.m[1], state.temples);
+    let html = '<div class="pop"><div class="pop-kicker">駅</div><div class="pop-place">' + esc(stName(s.name)) + '</div>';
+    if (r && r.tot >= 200) {
+      const p = pctOf(r.ok, r.tot);
+      html += '<div class="pop-dist"><b>' + p + '</b>%</div><div class="pop-to">徒歩10分圏の住宅向けの土地のうち、墓地から ' + state.T + 'm 以上離れた割合（港区内のみ）</div>';
+    } else if (!s.inWard) {
+      html += '<div class="pop-row">港区の外の駅です</div>';
+    }
+    html += '<div class="pop-row">駅から最寄りの墓地：' + esc(nc.name) + ' <b>' + fmtM(nc.d) + 'm</b></div></div>';
+    L.popup({ autoPanPadding: [20, 20], maxWidth: 280, offset: [0, -4] }).setLatLng([s.lat, s.lon]).setContent(html).openOn(map);
+    clearProbe();
+    probe = L.circle([s.lat, s.lon], { renderer: rHl, radius: STATION_R, color: tok.ink, weight: 2, dashArray: '2 6', lineCap: 'round', fill: false, interactive: false }).addTo(map);
+    if (!fromList) state.active = null;
+  }
+
+  map.on('click', (e) => { if (dist) openPoint(e.latlng); });
+
+  // ---------------------------------------------------------------- controls
+  const slider = $('threshold');
+  slider.value = state.T;
+  $('optTemples').checked = state.temples;
+  $('optLabels').checked = state.labels;
+
+  function renderThresholdText() {
+    $('tVal').textContent = state.T;
+    $('tWalk').textContent = '徒歩 ' + walkMin(state.T) + '分ぶん';
+  }
+  let raf = 0;
+  function scheduleUpdate() {
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      raf = 0;
+      paintOverlay(); computeStats(); renderSummary(); renderRanking(); renderLegend();
+    });
+  }
+  slider.addEventListener('input', () => {
+    state.T = clampT(slider.value);
+    renderThresholdText();
+    store.set('threshold', state.T);
+    if (dist) scheduleUpdate();
+  });
+  $('optTemples').addEventListener('change', (e) => {
+    state.temples = e.target.checked;
+    store.set('temples', state.temples);
+    applyZoomClasses();
+    if (zone) {
+      $('loading').hidden = false;
+      setTimeout(() => { dist = edt(buildSources(state.temples)); $('loading').hidden = true; map.closePopup(); scheduleUpdate(); }, 20);
+    }
+  });
+  $('optLabels').addEventListener('change', (e) => { state.labels = e.target.checked; store.set('labels', state.labels); applyZoomClasses(); });
+  document.querySelectorAll('.tab').forEach((b) => b.addEventListener('click', () => selectTab(b.dataset.tab)));
+  document.querySelector('.tabs').addEventListener('keydown', (e) => {
+    const order = ['town', 'chome', 'station'];
+    const k = order.indexOf(state.tab);
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const next = order[(k + (e.key === 'ArrowRight' ? 1 : 2)) % 3];
+      selectTab(next);
+      $('tab-' + next).focus();
+    }
+  });
+  function selectTab(t) {
+    state.tab = t;
+    store.set('tab', t);
+    document.querySelectorAll('.tab').forEach((b) => { const on = b.dataset.tab === t; b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1; });
+    if (stats) renderRanking();
+  }
+  $('rankList').addEventListener('click', (e) => {
+    const b = e.target.closest('.row');
+    if (b) focusKey(b.dataset.key);
+  });
+  $('resetView').addEventListener('click', () => {
+    map.closePopup(); clearHighlight(); state.active = null;
+    document.querySelectorAll('.row.active').forEach((b) => b.classList.remove('active'));
+    map.flyToBounds(wardBounds, { padding: [16, 16], animate: !reduceMotion, duration: 0.6 });
+  });
+  map.once('click', () => { $('hint').hidden = true; });
+
+  $('source').innerHTML = 'データ：<a href="https://overturemaps.org/" target="_blank" rel="noopener">Overture Maps Foundation</a> release 2026-09-23.1（base / divisions / places / transportation）。地図データの大部分は © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>（ODbL）です。距離の計算はこのページ上で行っています（8m 四方のメッシュ）。';
+  $('cemCount').textContent = cems.filter((c) => c.inWard).length;
+
+  // ---------------------------------------------------------------- boot
+  map.fitBounds(wardBounds, { padding: [16, 16] });
+  map.on('zoomend', applyZoomClasses);
+  applyZoomClasses();
+  selectTab(state.tab);
+  renderThresholdText();
+  renderLegend();
+
+  (async function boot() {
+    try {
+      zone = await inflate(G.zone);
+      flags = await inflate(G.flags);
+      dist = edt(buildSources(state.temples));
+      paintOverlay(); computeStats(); renderSummary(); renderRanking();
+      $('loading').hidden = true;
+    } catch (err) {
+      $('loading').textContent = 'このブラウザでは距離の計算ができませんでした。最新のブラウザで開いてください。';
+      console.error(err);
+    }
+  })();
+})();
+</script>
