@@ -2,7 +2,7 @@
 
 東京都港区で「墓地から離れた住宅エリア」を探すための地図です。
 
-**公開ページ：https://dkeikichi.github.io/tokyo-minato-cemetery-map/**
+**公開ページ：https://dkeikichi.github.io/tokyo-minato-cemetery-map/** /
 **Cloudflare公開ページ：https://tokyo-minato-cemetery-map.pages.dev/**
 
 `index.html` 1ファイルで動きます（Leaflet を cdnjs から読み込むため、インターネット接続が必要です）。
